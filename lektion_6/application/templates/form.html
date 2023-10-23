@@ -9,9 +9,14 @@
                 <form action="api" method="post">
                     <label for="year">Year:</label><br/>
                     <input type="text" id="year" name="year"><br/>
-                    <label for="ccode">Country code:</label><br/>
-                    <input type="text" id="ccode" name="countrycode"><br/>
-                    <!-- Lägg till fält här -->
+                    <select class="form-select" aria-label="Default select example">
+                        <option selected>Open this select menu</option>
+                        <ul>
+                        {% for row in countries %}
+                        <option value="{{row['countryCode']}}">{{row['name']}}</option>
+                        {% endfor %}
+                        </ul>
+                     </select>
                     <button type="submit" class="btn btn-primary mt-5">Submit</button>
                 </form>
             </div>    

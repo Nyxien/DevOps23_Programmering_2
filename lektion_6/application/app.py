@@ -6,11 +6,11 @@
 # Ett standardbibliotek är ett som levereras som en del av Pyhton, och de är ofta 'native python' el. med andra ord skrivna helt i python
 # Andra bibliotek kan vara skrivna med en annan miljö i bakgrunden, t.ex med C. Dessa bibliotek kan vara plattformsberoende (win, linux, mac osv)
 # medan bibliotek i native python är platformsoberoende och kan användas överallt där bythonkod kan köras. 
-
+import json, ssl
+from urllib import request as urlrequest
 from markupsafe import escape
 from application import func
 from flask import Flask, render_template, request
-
 # Skapa ett Flask server-objekt. Det är denna som ni sedan startar med 'flask run' från terminalen.
 app = Flask(__name__) 
 
@@ -21,9 +21,15 @@ def index():
        På en statisk webbsida skulle detta t.ex motsvara filen index.html'''
 
     ##### Plats för er kod #####
+    context = ssl._create_unverified_context()
+    inf_response = urlrequest.urlopen("https://1.1.1.1/cdn-cgi/trace", context=context).read()
+    split_response = inf_response.split()
+   
+        
+
 
     # Hämta index.html och uppdatera den med hjälp av Jinja, skicka den sedan till klienten (browsern)
-    return render_template('index.html')
+    return render_template('index.html', split_response = split_response)
 
 
 @app.route("/form") 
@@ -32,8 +38,13 @@ def form():
        På en statisk webbsida skulle detta t.ex kunna motsvara filen mappen /form med filen index.htm'''
 
     ##### Plats för er kod #####
+    context = ssl._create_unverified_context()
+    response = urlrequest.urlopen("https://date.nager.at/api/v3/AvailableCountries", context=context).read()
+    countries = json.loads(response)
 
-    return render_template('form.html')
+
+    return render_template('form.html', countries = countries)
+
 
 
 @app.route("/api", methods=["POST"]) 
@@ -48,7 +59,7 @@ def api_post():
     # Flask-kod sparar vi i app.py. Objectet request från flask innehåller den HTTP request som i det här fallet skickades till /api 
     # Läs innehållet från request som motsvarar <input> med name= 'year' samt 'countrycode' i HTML-formuläret <form> (form.html)
     year = request.form["year"]
-    country_code= request.form["countrycode"]
+    country_code = request.form["countryCode"]
 
     # Skapa URL för det API vi skall använda, med en formaterad sträng och injecera variablerna year, samt country_code
     data_url = f"https://date.nager.at/api/v3/PublicHolidays/{year}/{country_code}"
