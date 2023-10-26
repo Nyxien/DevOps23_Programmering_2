@@ -1,0 +1,34 @@
+<head>
+    <title>Electricity price checker</title>
+</head>
+<body>
+    <h1>Electricity price checker</h1>
+    <form method="POST" action="/">
+        <label for="year">Year:</label><br>
+        <input type="text" id="year" name="year"><br>
+        <label for="month">Month:</label><br>
+        <input type="text" id="month" name="month"><br>
+        <label for="day">Day:</label><br>
+        <input type="text" id="day" name="day"><br>
+        <label for="price_range">Price Range:</label><br>
+        <input type="text" id="price_range" name="price_range"><br><br>
+        <input type="submit" value="Submit">
+    </form>
+
+    {% if data %}
+        <h2>Data from API:</h2>
+        <ul>
+            {% for item in data %}
+                <li>
+                    <ul>
+                        <li><strong>SEK_per_kWh:</strong> {{ item['SEK_per_kWh'] }}</li>
+                        <li><strong>EUR_per_kWh:</strong> {{ item['EUR_per_kWh'] }}</li>
+                        <li><strong>EXR:</strong> {{ item['EXR'] }}</li>
+                        <li><strong>time_start:</strong> {{ item['time_start'] }}</li>
+                        <li><strong>time_end:</strong> {{ item['time_end'] }}</li>
+                    </ul>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</body>
