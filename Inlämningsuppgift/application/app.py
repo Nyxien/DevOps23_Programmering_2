@@ -1,4 +1,5 @@
 from urllib import request as urlrequest, parse
+from urllib import request as urlrequest, parse
 import json, ssl
 from flask import Flask, render_template, jsonify, request
 from datetime import datetime, timedelta
@@ -51,5 +52,4 @@ def index():
                 return render_template('index.html', data=data)
         else:
             return render_template('index.html', error="Invalid date range.")
-
     return render_template('index.html')
