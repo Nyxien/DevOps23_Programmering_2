@@ -1,5 +1,4 @@
 from urllib import request as urlrequest, parse
-from urllib import request as urlrequest, parse
 import json, ssl
 from flask import Flask, render_template, jsonify, request
 from datetime import datetime, timedelta
@@ -20,6 +19,13 @@ def get_prices(year, month, day, price_range):
         context = ssl._create_unverified_context()
         response = urlrequest.urlopen(url, context=context)
         data = json.loads(response.read())
+        
+    
+        # Här konverterar vi time_Start och time_end till tid stampar så det är mer läsbart för användaren. Detta görs genom att matcha tidsformatet i våran api och omvandla den.
+        for item in data:
+            item['time_start'] = datetime.strptime(item['time_start'], "%Y-%m-%dT%H:%M:%S%z").strftime("%H:%M")
+            item['time_end'] = datetime.strptime(item['time_end'], "%Y-%m-%dT%H:%M:%S%z").strftime("%H:%M")
+
         return data
 
     except urlrequest.HTTPError as e:

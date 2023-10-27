@@ -1,34 +1,50 @@
-<head>
-  <title>Electricity price checker</title>
-</head>
-<body>
-  <h1>Electricity price checker</h1>
-  <form method="POST" action="/">
-      <label for="year">Year:</label><br>
-      <input type="text" id="year" name="year"><br>
-      <label for="month">Month:</label><br>
-      <input type="text" id="month" name="month"><br>
-      <label for="day">Day:</label><br>
-      <input type="text" id="day" name="day"><br>
-      <label for="price_range">Price Range:</label><br>
-      <input type="text" id="price_range" name="price_range"><br><br>
-      <input type="submit" value="Submit">
-  </form>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Electricity price checker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  </head>
+  <body>
+    <h1>Electricity price checker</h1>
+    <form method="POST" action="/">
+        <label for="year">Year:</label><br>
+        <input type="text" id="year" name="year"><br>
+        <label for="month">Month:</label><br>
+        <input type="text" id="month" name="month"><br>
+        <label for="day">Day:</label><br>
+        <input type="text" id="day" name="day"><br>
+        <label for="price_range">Price Range:</label><br>
+        <input type="text" id="price_range" name="price_range"><br><br>
+        <input type="submit" value="Submit">
+    </form>
 
-  {% if data %}
-      <h2>Data from API:</h2>
-      <ul>
-          {% for item in data %}
-              <li>
-                  <ul>
-                      <li><strong>SEK_per_kWh:</strong> {{ item['SEK_per_kWh'] }}</li>
-                      <li><strong>EUR_per_kWh:</strong> {{ item['EUR_per_kWh'] }}</li>
-                      <li><strong>EXR:</strong> {{ item['EXR'] }}</li>
-                      <li><strong>time_start:</strong> {{ item['time_start'] }}</li>
-                      <li><strong>time_end:</strong> {{ item['time_end'] }}</li>
-                  </ul>
-              </li>
-          {% endfor %}
-      </ul>
-  {% endif %}
-</body>
+    {% if data %}
+    <h2>Data from API:</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">SEK_per_kWh</th>
+          <th scope="col">EUR_per_kWh</th>
+          <th scope="col">Exhange Rate</th>
+          <th scope="col">Time Range</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in data %}
+        <tr>
+          <th scope="row">{{ loop.index }}</th>
+          <td>{{ item['SEK_per_kWh'] }}</td>
+          <td>{{ item['EUR_per_kWh'] }}</td>
+          <td>{{ item['EXR'] }}</td>
+          <td>{{ item['time_start'] }} - {{ item['time_end'] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+  </body>
+</html>
+   
