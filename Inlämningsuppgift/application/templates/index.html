@@ -8,7 +8,7 @@
   </head>
   <body>
     <h1>Electricity price checker</h1>
-    <form method="POST" action="/">
+    <form method="POST" action="{{ url_for('result') }}">
       <div class="mb-3">
         <label for="year" class="form-label">Year:</label>
         <input type="text" class="form-control" id="year" name="year" placeholder="Enter year">
@@ -31,33 +31,7 @@
           <option value="SE4">Malmö / Södra Sverige</option>
         </select>
       </div>
-
       <input type="submit" value="Submit">
     </form>
-
-    {% if data %}
-    <h2>Data from API:</h2>
-    <p><strong> Current exchange rate is: </strong> {{ data[0]['EXR'] }}</p>
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">SEK_per_kWh</th>
-          <th scope="col">EUR_per_kWh</th>
-          <th scope="col">Time</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for item in data %}
-        <tr>
-          <th scope="row">{{ loop.index }}</th>
-          <td>{{ item['SEK_per_kWh'] }}</td>
-          <td>{{ item['EUR_per_kWh'] }}</td>
-          <td>{{ item['time_start'] }} - {{ item['time_end'] }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    {% endif %}
   </body>
 </html>

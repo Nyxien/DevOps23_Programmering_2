@@ -1,6 +1,6 @@
 from urllib import request as urlrequest, parse
 import json, ssl
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, redirect, url_for
 from datetime import datetime, timedelta
 
 
@@ -51,11 +51,27 @@ def index():
 
         data = get_prices(year, month, day, price_range)
 
+        return redirect(url_for('result', year=year, month=month, day=day, price_range=price_range))
+    return render_template('index.html')
+
+
+
+@app.route('/result', methods=['GET', 'POST'])
+def result():
+    if request.method == 'POST':
+        year = request.form['year']
+        month = request.form['month']
+        day = request.form['day']
+        price_range = request.form['price_range']
+
+        data = get_prices(year, month, day, price_range)
+
         if data:
             if "error" in data:
-                return render_template('index.html', error=data["error"])
+                return render_template('result.html', error=data["error"])
             else:
-                return render_template('index.html', data=data)
+                return render_template('result.html', data=data)
         else:
-            return render_template('index.html', error="Invalid date range.")
-    return render_template('index.html')
+            return render_template('result.html', error="Invalid date range.")
+
+    return render_template('result.html')
