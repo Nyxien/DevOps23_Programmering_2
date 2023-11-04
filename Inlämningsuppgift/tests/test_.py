@@ -1,8 +1,6 @@
 from urllib import request as urlrequest
 from flask import Flask
 import pytest
-from requests.exceptions import ConnectionError
-import ssl
 import os
 import sys
 
