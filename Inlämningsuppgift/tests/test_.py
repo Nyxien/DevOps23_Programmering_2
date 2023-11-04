@@ -65,3 +65,10 @@ def test_get_prices():
     data = get_prices(datumintervall_fel_ar, datumintervall_fel_manad, datumintervall_fel_dag, datumintervall_fel_prisintervall)
     assert data == False
 
+def test_404_error_handling():
+    '''I denna test case simulerar vi ett 404 scenario i våran flask app för att testa om vår felkod returneras'''
+    with app.test_request_context():
+        # Simulera ett scenario där API-anropet returnerar en 404-felkod
+        with pytest.raises(Exception) as e_info:
+            get_prices("2023", "13", "32", "SE3")  # Ange ett ogiltigt datum för att utlösa en 404-felkod
+            assert "404" in str(e_info.value)  # Kontrollera om felmeddelandet innehåller "404"

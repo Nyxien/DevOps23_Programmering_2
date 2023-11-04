@@ -30,6 +30,12 @@
         {% endfor %}
       </tbody>
     </table>
+    {% elif error %}
+    <h2>Error:</h2>
+    <p>{{ error }}</p>
+    {% else %}
+    <h2>Error:</h2>
+    <p>No data to display.</p>
     {% endif %}
   </body>
 </html>
