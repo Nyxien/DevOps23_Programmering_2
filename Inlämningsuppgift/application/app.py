@@ -1,10 +1,10 @@
-from urllib import request as urlrequest, parse
+from urllib import request as urlrequest
 import json, ssl
-from flask import Flask, render_template, jsonify, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for
 from datetime import datetime, timedelta
 
 
-app = Flask(__name__)
+app = Flask(__name__) # Här skapas en instans av Flask applikationen
 
 def get_prices(year, month, day, price_range):
     try:
@@ -12,12 +12,14 @@ def get_prices(year, month, day, price_range):
         min_date = datetime(2022, 11, 1)
         max_date = datetime.now() + timedelta(days=1)
 
+        # Kontrollerar om inputdatan är inom det tillåtna intervallet
         if input_date < min_date or input_date > max_date:
             return False
         
         formatted_month = str(month).zfill(2) # Här försäkrar vi att datan som matas in blir i två siffror, t.ex januari är "01" istället för "1". Detta är för att månaderna/dagarna ska formateras rätt till våran API.
-        formatted_day = str(day).zfill(2)
+        formatted_day = str(day).zfill(2) # Som ovan formateras dagen till två siffror då.
 
+        # Skapar URL för att hämta data från api som en f sträng för att kunna sätta in datan.
         url = f"https://www.elprisetjustnu.se/api/v1/prices/{year}/{formatted_month}-{formatted_day}_{price_range}.json"
         context = ssl._create_unverified_context()
         response = urlrequest.urlopen(url, context=context)
@@ -31,25 +33,26 @@ def get_prices(year, month, day, price_range):
 
         return data
     
-    except urlrequest.HTTPError as e:
+    except urlrequest.HTTPError as e: # Hanterar HTTP fel
         if e.code == 404:
             return {"error": "404 - Not found"}
         else:
             return {"error": f"An HTTP error occurred: {e}"}
 
-    except ValueError:
+    except ValueError: # Hanterar ogiltig input
         return {"error": "Invalid input data"}
 
-    except Exception as e:
+    except Exception as e: # Här hanteras alla andra typer av fel
         return {"error": f"An error occurred: {e}"}
 
 @app.route("/", methods=['GET', 'POST'])
-def index():
+def index(): # Endpoint för formuläret
 
+    # Hämtar det nuvarande året
     current_year = datetime.now().year
 
     if request.method == 'POST':
-        # Hämtar input values
+        # Hämtar input values från formuläret
         year = request.form['year']
         month = request.form['month']
         day = request.form['day']
@@ -63,8 +66,10 @@ def index():
 
 
 @app.route('/result', methods=['GET', 'POST'])
-def result():
+def result(): # Endpoint för resultatet efter användaren har fyllt in formuläret.
+
     if request.method == 'POST':
+        # Hämtar input värden från formuläret och anropar get_prices funktionen
         year = request.form['year']
         month = request.form['month']
         day = request.form['day']
@@ -72,6 +77,7 @@ def result():
 
         data = get_prices(year, month, day, price_range)
 
+        # Hanterar olika fall, såsom felmeddelanden och ogiltliga datum.
         if data:
             if "error" in data:
                 return render_template('result.html', error=data["error"])
@@ -81,3 +87,10 @@ def result():
             return render_template('result.html', error="Invalid date range.")
 
     return render_template('result.html')
+
+@app.errorhandler(404)
+def page_not_found(e): # Här skapar vi en endpoint där vi plockar upp 404 kod
+    return render_template('404.html'), 404
+
+if __name__ == '__main__':
+    app.run(debug=True)
