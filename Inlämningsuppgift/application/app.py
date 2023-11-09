@@ -6,8 +6,8 @@ from datetime import datetime, timedelta
 
 app = Flask(__name__) # Här skapas en instans av Flask applikationen
 
-def get_prices(year, month, day, price_range):
-    try:
+def get_prices(year, month, day, price_range): 
+    try: # Här anger vi intervallet av den tillåtna indatan.
         input_date = datetime(int(year), int(month), int(day))
         min_date = datetime(2022, 11, 1)
         max_date = datetime.now() + timedelta(days=1)
@@ -21,7 +21,7 @@ def get_prices(year, month, day, price_range):
 
         # Skapar URL för att hämta data från api som en f sträng för att kunna sätta in datan.
         url = f"https://www.elprisetjustnu.se/api/v1/prices/{year}/{formatted_month}-{formatted_day}_{price_range}.json"
-        context = ssl._create_unverified_context()
+        context = ssl._create_unverified_context() # Här skapar vi en osäker SSL uppkoppling, detta bör endast användas i en testmiljö och inte i produktion. Fördelarna med är enklare testning, förenklad felsökning då man kan fokusera på själva funktionaliteten i applikationen och undvika att blockeras av SSL relaterade problem.
         response = urlrequest.urlopen(url, context=context)
         data = json.loads(response.read())
         
@@ -89,7 +89,7 @@ def result(): # Endpoint för resultatet efter användaren har fyllt in formulä
     return render_template('result.html')
 
 @app.errorhandler(404)
-def page_not_found(e): # Här skapar vi en endpoint där vi plockar upp 404 kod
+def page_not_found(e): # Här skapar vi en endpoint som hanterar 404 kod och tar en till en anpassad sida.
     return render_template('404.html'), 404
 
 if __name__ == '__main__':
