@@ -1,5 +1,4 @@
 from urllib import request as urlrequest
-from flask import Flask
 import pytest
 import os
 import sys
@@ -40,27 +39,27 @@ def test_Is_API_online_index():
 def test_get_prices():
     '''Denna test_case testar våran funktion get_prices med olika typer av data för att säkerställa att koden hanterar giltig och ogiltig input'''
     # Testa giltig input
-    giltigt_ar = 2023
-    giltig_manad = 11
-    giltig_dag = 3
-    giltigt_prisintervall = 'nagot_intervall'
-    data = get_prices(giltigt_ar, giltig_manad, giltig_dag, giltigt_prisintervall)
+    valid_year = 2023 # giltig år   
+    valid_month = 11 # giltig månad
+    valid_day = 3 #giltig dag
+    valid_price_range = 'SE1'
+    data = get_prices(valid_year, valid_month, valid_day, valid_price_range)
     assert data is not False
 
     # Testa ogiltig input
-    ogiltigt_ar = 2025
-    ogiltig_manad = 13  # Ogiltig månad
-    ogiltig_dag = 32  # Ogiltig dag
-    ogiltigt_prisintervall = 'nagot_ogiltigt_intervall'
-    data = get_prices(ogiltigt_ar, ogiltig_manad, ogiltig_dag, ogiltigt_prisintervall)
+    invalid_year = 2025 # ogiltig år
+    invalid_month = 13  # Ogiltig månad
+    invalid_day = 32  # Ogiltig dag
+    invalid_price_range = 'invalid_range'
+    data = get_prices(invalid_year, invalid_month, invalid_day, invalid_price_range)
     assert data == {"error": "Invalid input data"}
 
     # Testa datumintervallfel
-    datumintervall_fel_ar = 2021
-    datumintervall_fel_manad = 10
-    datumintervall_fel_dag = 20
-    datumintervall_fel_prisintervall = 'något_intervall'
-    data = get_prices(datumintervall_fel_ar, datumintervall_fel_manad, datumintervall_fel_dag, datumintervall_fel_prisintervall)
+    date_interval_year = 2021
+    date_interval_month = 10
+    date_interval_day = 20
+    date_interval_price_range = 'interval_range'
+    data = get_prices(date_interval_year, date_interval_month, date_interval_day, date_interval_price_range)
     assert data == False
 
 def test_404_error_handling():
